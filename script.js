@@ -1,17 +1,3 @@
-// Display and buttons
-const display = document.querySelector(".display");
-const digitButtons = document.querySelectorAll(".digit");
-const operatorButtons = document.querySelectorAll(".operator");
-const equalButton = document.querySelector(".equal");
-const clearButton = document.querySelector(".clear");
-
-// Calculator state
-let firstNum = null;
-let operator = null;
-let secondNum = null;
-let lastRes = null;
-let currentInput = "";
-let shouldResetDisplay = false;
 
 
 function add(a, b) {
@@ -37,69 +23,58 @@ function operate(operator, a, b) {
     return multiply(a, b);
 }
 
+const display = document.querySelector(".display");
+const digits = document.querySelectorAll(".digit");
+const operators = document.querySelectorAll(".operator");
+const equal = document.querySelector(".equal");
+const clear = document.querySelector(".clear");
+
+digits.forEach(digit => {
+    digit.addEventListener("click", () => input(digit.textContent));
+});
+
+operators.forEach(operator => {
+    operator.addEventListener("click", () => {
+        input(operator.textContent);
+    });
+});
+
+equal.addEventListener("click", () => {
+    input("=");
+});
+
+clear.addEventListener("click", () => {
+    input("clear");
+});
+
+let firstNum = null;
+let secondNum = null;
+let lastRes = null;
+let currDisplay = '';
+let operator = null;
+let resetDisplay = false;
 
 function input(value) {
-    if (value === "clear") {
-        firstNum = null;
-        operator = null;
-        secondNum = null;
-        lastRes = null;
-        currentInput = "";
-        shouldResetDisplay = false;
-        display.textContent = "";
-        return;
-    }
 
-    if (value === "=") {
-        if (firstNum !== null && operator !== null && currentInput !== "") {
-            secondNum = Number(currentInput);
-            lastRes = operate(operator, firstNum, secondNum);
-            currentInput = lastRes.toString();
-            display.textContent = currentInput;
-            firstNum = lastRes;
-            operator = null;
-            shouldResetDisplay = true;
-        }
-        return;
-    }
-
-    if (["+", "-", "x", "/"].includes(value)) {
-        // convert "x" to "*"
-        if (value === "x") value = "*";
-
+    if (value == '+' || value == '-' || value == 'x' || value == '/') {
         if (firstNum === null) {
-            firstNum = Number(currentInput);
-        } else if (operator !== null && currentInput !== "") {
-            secondNum = Number(currentInput);
+            firstNum = Number(currDisplay);
+        } else if (operator != null && currDisplay != '') {
+            secondNum = Number(currDisplay);
             lastRes = operate(operator, firstNum, secondNum);
             firstNum = lastRes;
-            currentInput = lastRes.toString();
-            display.textContent = currentInput;
+            secondNum = null;
+            display.textContent = lastRes;
         }
         operator = value;
-        shouldResetDisplay = true;
+        resetDisplay = true;
         return;
     }
-
-    // Digits
-    if (shouldResetDisplay) {
-        currentInput = value;
-        shouldResetDisplay = false;
+    if (resetDisplay) {
+        currDisplay = value;
+        resetDisplay = false;
     } else {
-        currentInput += value;
+        currDisplay += value;
     }
-    display.textContent = currentInput;
+    display.textContent = currDisplay;
 }
-
-// Add event listeners
-digitButtons.forEach(btn => {
-    btn.addEventListener("click", () => input(btn.textContent));
-});
-
-operatorButtons.forEach(btn => {
-    btn.addEventListener("click", () => input(btn.textContent));
-});
-
-equalButton.addEventListener("click", () => input("="));
-clearButton.addEventListener("click", () => input("clear"));
-
