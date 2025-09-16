@@ -29,6 +29,7 @@ const operators = document.querySelectorAll(".operator");
 const equal = document.querySelector(".equal");
 const clear = document.querySelector(".clear");
 const dot = document.querySelector(".dot");
+const backspace = document.querySelector(".backspace");
 
 digits.forEach(digit => {
     digit.addEventListener("click", () => input(digit.textContent));
@@ -52,6 +53,10 @@ dot.addEventListener("click", () => {
     input("dot");
 });
 
+backspace.addEventListener("click", () => {
+    input("backspace");
+});
+
 let firstNum = null;
 let secondNum = null;
 let lastRes = null;
@@ -61,6 +66,16 @@ let resetDisplay = false;
 let dotUsed = false;
 
 function input(value) {
+    if (value === 'backspace') {
+        if (currDisplay !== '') {
+            if (currDisplay.slice(-1) === '.') {
+                dotUsed = false;
+            }
+            currDisplay = currDisplay.slice(0, -1);
+            display.textContent = currDisplay;
+        }
+        return;
+    }
     if (value === "dot" && !dotUsed) {
         currDisplay += '.';
         display.textContent = currDisplay;
@@ -113,7 +128,9 @@ function input(value) {
         currDisplay = value;
         resetDisplay = false;
     } else {
-        currDisplay += value;
+        if (currDisplay.length < 12) {
+            currDisplay += value;
+        }
     }
     display.textContent = currDisplay;
 }
