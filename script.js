@@ -55,11 +55,22 @@ let operator = null;
 let resetDisplay = false;
 
 function input(value) {
-
-    if (value == '+' || value == '-' || value == 'x' || value == '/') {
+    if (value === '=') {
+        if (firstNum !== null && operator !== null && currDisplay !== '') {
+            secondNum = Number(currDisplay);
+            lastRes = operate(operator, firstNum, secondNum);
+            firstNum = lastRes;
+            secondNum = null;
+            display.textContent = lastRes;
+            operator = null;
+            resetDisplay = true;
+        }
+        return;
+    }
+    if (value === '+' || value === '-' || value === 'x' || value === '/') {
         if (firstNum === null) {
             firstNum = Number(currDisplay);
-        } else if (operator != null && currDisplay != '') {
+        } else if (operator !== null && currDisplay !== '') {
             secondNum = Number(currDisplay);
             lastRes = operate(operator, firstNum, secondNum);
             firstNum = lastRes;
