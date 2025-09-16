@@ -55,6 +55,16 @@ let operator = null;
 let resetDisplay = false;
 
 function input(value) {
+    if (value === 'clear') {
+        firstNum = null;
+        secondNum = null;
+        lastRes = null;
+        currDisplay = '';
+        operator = null;
+        resetDisplay = false;
+        display.textContent = '';
+        return;
+    }
     if (value === '=') {
         if (firstNum !== null && operator !== null && currDisplay !== '') {
             secondNum = Number(currDisplay);
@@ -77,6 +87,7 @@ function input(value) {
             secondNum = null;
             display.textContent = lastRes;
         }
+        currDisplay = '';
         operator = value;
         resetDisplay = true;
         return;
