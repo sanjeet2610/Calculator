@@ -28,6 +28,7 @@ const digits = document.querySelectorAll(".digit");
 const operators = document.querySelectorAll(".operator");
 const equal = document.querySelector(".equal");
 const clear = document.querySelector(".clear");
+const dot = document.querySelector(".dot");
 
 digits.forEach(digit => {
     digit.addEventListener("click", () => input(digit.textContent));
@@ -47,14 +48,25 @@ clear.addEventListener("click", () => {
     input("clear");
 });
 
+dot.addEventListener("click", () => {
+    input("dot");
+});
+
 let firstNum = null;
 let secondNum = null;
 let lastRes = null;
 let currDisplay = '';
 let operator = null;
 let resetDisplay = false;
+let dotUsed = false;
 
 function input(value) {
+    if (value === "dot" && !dotUsed) {
+        currDisplay += '.';
+        display.textContent = currDisplay;
+        dotUsed = true;
+        return;
+    }
     if (value === 'clear') {
         firstNum = null;
         secondNum = null;
@@ -62,6 +74,7 @@ function input(value) {
         currDisplay = '';
         operator = null;
         resetDisplay = false;
+        dotUsed = false;
         display.textContent = '';
         return;
     }
@@ -69,8 +82,10 @@ function input(value) {
         if (firstNum !== null && operator !== null && currDisplay !== '') {
             secondNum = Number(currDisplay);
             lastRes = operate(operator, firstNum, secondNum);
+            lastRes = parseFloat(lastRes.toFixed(5));
             firstNum = lastRes;
             secondNum = null;
+            dotUsed = false;
             display.textContent = lastRes;
             operator = null;
             resetDisplay = true;
@@ -83,11 +98,13 @@ function input(value) {
         } else if (operator !== null && currDisplay !== '') {
             secondNum = Number(currDisplay);
             lastRes = operate(operator, firstNum, secondNum);
+            lastRes = parseFloat(lastRes.toFixed(5));
             firstNum = lastRes;
             secondNum = null;
             display.textContent = lastRes;
         }
         currDisplay = '';
+        dotUsed = false;
         operator = value;
         resetDisplay = true;
         return;
