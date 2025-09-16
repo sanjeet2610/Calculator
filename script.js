@@ -96,6 +96,16 @@ function input(value) {
     if (value === '=') {
         if (firstNum !== null && operator !== null && currDisplay !== '') {
             secondNum = Number(currDisplay);
+            if (secondNum === 0 && operator === '/') {
+                display.textContent = "error can't divide by zero";
+                firstNum = null;
+                secondNum = null;
+                operator = null;
+                currDisplay = '';
+                resetDisplay = true;
+                dotUsed = false;
+                return;
+            }
             lastRes = operate(operator, firstNum, secondNum);
             lastRes = parseFloat(lastRes.toFixed(5));
             firstNum = lastRes;
@@ -107,11 +117,24 @@ function input(value) {
         }
         return;
     }
+    if ((value === '+' || value === '-' || value === 'x' || value === '/') && currDisplay === '') {
+        return;
+    }
     if (value === '+' || value === '-' || value === 'x' || value === '/') {
         if (firstNum === null) {
             firstNum = Number(currDisplay);
         } else if (operator !== null && currDisplay !== '') {
             secondNum = Number(currDisplay);
+            if (secondNum === 0 && operator === '/') {
+                display.textContent = "error can't divide by zero";
+                firstNum = null;
+                secondNum = null;
+                operator = null;
+                currDisplay = '';
+                resetDisplay = true;
+                dotUsed = false;
+                return;
+            }
             lastRes = operate(operator, firstNum, secondNum);
             lastRes = parseFloat(lastRes.toFixed(5));
             firstNum = lastRes;
